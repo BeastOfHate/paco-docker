@@ -2,19 +2,19 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:8.0
+    image: mysql:8.0-debian
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
     ports:
       - "3306:3306"
     command: >
-      sh -c "dnf install git -y &&
+      sh -c "sudo apt install git -y &&
              git clone https://github.com/RedAzrael/paco-database.git /tmp/db-script &&
-             mysql -u root -prootpass < /tmp/db-script/init.sql"
+             sudo mysql -u root -prootpass < /tmp/db-script/init.sql"
 
 
   backend:
-    image: python:3.9
+    image: python:3.10
     depends_on:
       - db
     environment:
