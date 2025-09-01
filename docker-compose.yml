@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+     - "3306:3306"
+    command: >
+	sh -c  "apt-get update && apt-get install -y git &&
+		git clone https://github.com/RedAzrael/paco-database.git &&
+		cd paco-database &&
+		sudo systemctl start mysql.service &&
+		sudo mysql -u root -p < init.sql"
+
+  backend:
+    image: python:3.9
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+    ports:
+      - "3001:3001"  # Expose backend on port 8000
+    command: >
+      sh -c "apt-get update && apt-get install -y git &&
+             git clone https://github.com/RedAzrael/paco-backend.git /app &&
+             cd /app &&
+             pip install -r requirements.txt &&
+             python main.py"
+
+  frontend:
+    image: node:18
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_API_URL: http://backend:3001 
+    ports:
+    - "3000:3000"
+    command: >
+      sh -c "apt-get update && apt-get install -y git &&
+             git clone https://github.com/RedAzrael/paco-frontend.git /app &&
+             cd /app &&
+             npm install &&
+             npm start"
+
