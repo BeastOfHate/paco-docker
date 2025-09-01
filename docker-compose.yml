@@ -8,10 +8,10 @@ services:
     ports:
       - "3306:3306"
     command: >
-      sh -c "apt-get update && apt-get install -y git &&
+      sh -c "sudo dnf install git -y &&
              git clone https://github.com/RedAzrael/paco-database.git /tmp/db-script &&
-             cp /tmp/db-script/init.sql /docker-entrypoint-initdb.d/ &&
-             /usr/local/bin/docker-entrypoint.sh mysqld"
+             sudo mysql -u root -prootpass < /tmp/db-script/init.sql"
+
 
   backend:
     image: python:3.9
