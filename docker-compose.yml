@@ -8,7 +8,7 @@ services:
     ports:
       - "3306:3306"
     command: >
-      sh -c "apt install git -y &&
+      sh -c "apt update && apt install git -y &&
              git clone https://github.com/RedAzrael/paco-database.git /tmp/db-script &&
              mysql -u root -prootpass < /tmp/db-script/init.sql"
 
